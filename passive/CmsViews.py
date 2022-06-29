@@ -33,7 +33,6 @@ class CmsViews(APIView):
                 'error': serializer.errors
             })
         except Exception as e:
-            print(e)
             return Response({
                 'status': 400,
                 'message': 'Something went wrong'
@@ -60,10 +59,9 @@ class CmsViews(APIView):
             return Response({
                 'status': False,
                 'message': 'Error',
-                'error': serializer.errors()
+                'error': serializer.errors
             })
         except Exception as e:
-            print(e)
             return Response({
                 'status': False,
                 'message': 'Something went wrong'
