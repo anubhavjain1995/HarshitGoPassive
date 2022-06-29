@@ -38,35 +38,33 @@ class CmsViews(APIView):
                 'status': 400,
                 'message': 'Something went wrong'
             })
-"""
+
     def patch(self,request):
         try:
             data = request.data
-            if not data.get('uuid'):
+            if not data.get('id'):
                 return Response({
                     'status': False,
                     'message': 'uuid is required',
                     'data': {}
                 })
-            obj = ToDo.objects.get(uuid=data.get('uuid'))
-            serializer = TodoSerializer(obj, data=data, partial=True)
+            obj = HomeCms.objects.get(id=data.get('id'))
+            serializer = HomeSerializer(obj, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response({
                     'status': True,
-                    'message': 'Todo Updated Successfully',
+                    'message': 'Home cms Updated Successfully',
                     'data': serializer.data
                 })
             return Response({
                 'status': False,
                 'message': 'Error',
-                'error': serializer.errors()
+                'error': serializer.errors
             })
         except Exception as e:
-            print(e)
             return Response({
                 'status': False,
                 'message': 'Something went wrong'
             })
 
-"""
