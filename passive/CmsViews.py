@@ -2,9 +2,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import HomeCms
 from .seiralizers import HomeSerializer
+from rest_framework.parsers import FormParser,JSONParser, MultiPartParser,FileUploadParser
 
 
 class CmsViews(APIView):
+    parser_classes = (FormParser,JSONParser, MultiPartParser,FileUploadParser)
+
     def get(self, request):
         todo_objs = HomeCms.objects.all()
         serializer = HomeSerializer(todo_objs, many=True)
@@ -38,7 +41,7 @@ class CmsViews(APIView):
                 'message': 'Something went wrong'
             })
 
-    def patch(self,request):
+    def patch(self, request):
         try:
             data = request.data
             if not data.get('id'):
@@ -66,7 +69,3 @@ class CmsViews(APIView):
                 'status': False,
                 'message': 'Something went wrong'
             })
-
-
-
-
