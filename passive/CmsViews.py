@@ -30,10 +30,9 @@ class CmsViews(APIView):
             return Response({
                 'status': 400,
                 'message': 'Error',
-                'error': serializer.errors()
+                'error': serializer.errors
             })
         except Exception as e:
-            print(e)
             return Response({
                 'status': 400,
                 'message': 'Something went wrong'
@@ -45,7 +44,7 @@ class CmsViews(APIView):
             if not data.get('id'):
                 return Response({
                     'status': False,
-                    'message': 'uuid is required',
+                    'message': 'id is required',
                     'data': {}
                 })
             obj = HomeCms.objects.get(id=data.get('id'))
@@ -54,7 +53,7 @@ class CmsViews(APIView):
                 serializer.save()
                 return Response({
                     'status': True,
-                    'message': 'Home cms Updated Successfully',
+                    'message': 'HomeCms Updated Successfully',
                     'data': serializer.data
                 })
             return Response({
@@ -67,4 +66,7 @@ class CmsViews(APIView):
                 'status': False,
                 'message': 'Something went wrong'
             })
+
+
+
 
