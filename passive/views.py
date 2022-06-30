@@ -11,25 +11,3 @@ from .seiralizers import HomeSerializer
 @api_view()
 def home(request):
     return Response({"message": "Hello, world!"})
-
-@api_view()
-def uploadCms(request):
-    # queryset = HomeCms.objects.all()
-    serializer_class = HomeSerializer(data=request.data)
-    if serializer_class.is_valid():
-        serializer_class.save()
-        return Response({
-            'status': 200,
-            'data': serializer_class.data
-        })
-    else:
-        return Response({
-            'status': 200,
-            'data': serializer_class.errors
-        })
-
-
-class UploadHomeCms(viewsets.ModelViewSet):
-    parser_classes = (JSONParser, MultiPartParser)
-
-    # @action(detail=True, methods=['patch'])
