@@ -53,8 +53,20 @@ class HomeCms(WebBaseModel):
     bottom_text = models.TextField()
 
 
+# change table name as testimonial
 class HomeCmsClientsSlider(WebBaseModel):
     id = models.AutoField(primary_key=True)
     uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
     profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
     text = models.TextField()
+
+class admin(WebBaseModel):
+    id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
+    admin_type = models.IntegerField(default=1)
+    username = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    password = models.CharField(max_length=255)
+    profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
+    token= models.CharField(max_length=255)
+    
