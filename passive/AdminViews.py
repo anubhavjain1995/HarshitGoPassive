@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import admin
-from .seiralizers import AdminSerializer
+from .seiralizers import AdminSerializer,AdminRegistrationSerializet
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser, FileUploadParser
 
 
@@ -71,37 +71,3 @@ class AdminViews(APIView):
                 'message': 'Something went wrong'
             })
 
-    def login(self, request):
-       try:
-            data = request.data
-            if not data.get('email'):
-                return Response({
-                    'status': False,
-                    'message': 'Email id is required',
-                    'data': {}
-                })
-            if not data.get('password'):
-                return Response({
-                    'status': False,
-                    'message': 'Password is required',
-                    'data': {}
-                })    
-            obj = admin.objects.get(email=data.get('email'))
-            serializer = AdminSerializer(obj, data=data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response({
-                    'status': True,
-                    'message': ' Updated Successfully',
-                    'data': serializer.data
-                })
-            return Response({
-                'status': False,
-                'message': 'Error',
-                'error': serializer.errors
-            })
-       except Exception as e:
-            return Response({
-                'status': False,
-                'message': 'Something went wrong'
-            })
