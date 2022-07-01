@@ -57,16 +57,16 @@ class HomeCms(WebBaseModel):
 class HomeCmsClientsSlider(WebBaseModel):
     id = models.AutoField(primary_key=True)
     uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
-    profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
+    profile_image = models.ImageField(upload_to="profile_pictures", blank=True)
     text = models.TextField()
 
-class admin(WebBaseModel):
+
+class AdminModelTable(WebBaseModel):
     id = models.AutoField(primary_key=True)
     uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
     admin_type = models.IntegerField(default=1)
     username = models.CharField(max_length=100)
-    email = models.CharField(max_length=100,unique=True)
+    email = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=255)
-    profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
-    token = models.CharField(max_length=255,unique=True)
-    
+    profile_image = models.ImageField(upload_to="profile_pictures", blank=True)
+    token = models.CharField(max_length=255, unique=True)

@@ -2,7 +2,7 @@ from abc import ABC
 
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from .models import HomeCms, admin
+from .models import HomeCms, AdminModelTable
 from django.contrib.auth.hashers import make_password
 
 
@@ -15,7 +15,7 @@ class HomeSerializer(serializers.ModelSerializer):
 
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
-        model = admin
+        model = AdminModelTable
         # view all coloumns
         fields = '__all__'
 
@@ -24,14 +24,14 @@ class AdminRegistrationSerializet(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
-        model = admin
+        model = AdminModelTable
         fields = ['username', 'email', 'password', 'admin_type', 'password2', ]
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def save(self):
-        account = admin(email=self.validated_data['email'],
+        account = AdminModelTable(email=self.validated_data['email'],
                         username=self.validated_data['username'],
                         admin_type=self.validated_data['admin_type'],
                         )
@@ -48,22 +48,22 @@ class AdminRegistrationSerializet(serializers.ModelSerializer):
 
 class AdminLoginSerializer(serializers.ModelSerializer):
     class Meta:
-        model = admin
+        model = AdminModelTable
         fields = ['email','password',]
 
-    def validate(self, attrs):
-        if attrs.get('email') and attrs.get('password'):
-            user = authenticate(request=self.context.get('request'),
-                                email=attrs.get('email'), password=attrs.get('password'))
-            if not user:
-                msg = 'Unable to log in with provided credentials.'
-                raise serializers.ValidationError(msg, code='authorization')
-        else:
-            msg = 'Must include "username" and "password".'
-            raise serializers.ValidationError(msg, code='authorization')
-
-
-        return user
+    # def validate(self, attrs):
+    #     if attrs.get('email') and attrs.get('password'):
+    #         user = authenticate(request=self.context.get('request'),
+    #                             email=attrs.get('email'), password=attrs.get('password'))
+    #         if not user:
+    #             msg = 'Unable to log in with provided credentials.'
+    #             raise serializers.ValidationError(msg, code='authorization')
+    #     else:
+    #         msg = 'Must include "username" and "password".'
+    #         raise serializers.ValidationError(msg, code='authorization')
+    #
+    #
+    #     return user
         # if not attrs.get('email') == "":
         #     if not attrs.get('password') == "":
         #         account = admin.objects().get(email=attrs.get('email'), password=attrs.get('password'))

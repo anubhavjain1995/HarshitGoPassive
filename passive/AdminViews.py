@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import admin
+from .models import AdminModelTable
 from .seiralizers import AdminSerializer,AdminRegistrationSerializet
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser, FileUploadParser
 
@@ -10,7 +10,7 @@ class AdminViews(APIView):
                       MultiPartParser, FileUploadParser)
 
     def get(self, request):
-        todo_objs = admin.objects.all()
+        todo_objs = AdminModelTable.objects.all()
         serializer = AdminSerializer(todo_objs, many=True)
 
         return Response({
@@ -51,7 +51,7 @@ class AdminViews(APIView):
                     'message': 'id is required',
                     'data': {}
                 })
-            obj = admin.objects.get(uuid=data.get('uuid'))
+            obj = AdminModelTable.objects.get(uuid=data.get('uuid'))
             serializer = AdminSerializer(obj, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
