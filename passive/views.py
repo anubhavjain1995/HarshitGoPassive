@@ -2,10 +2,13 @@ from rest_framework.decorators import api_view, action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status, viewsets, request
-from .models import HomeCms
+from .models import HomeCms,AdminDataTable
+from django.contrib.auth import authenticate
 from .seiralizers import HomeSerializer,AdminRegistrationSerializet,AdminLoginSerializer
 import pdb;
 # Create your views here.
+
+
 
 @api_view()
 def home(request):
@@ -53,33 +56,44 @@ def registration(request):
 
             })
 
-@api_view(['POST',])
+@api_view(['POST', ])
 def adminLogin(request):
-       try:
-           if request.method == 'POST':
-               # pdb.set_trace()
-               serializer = AdminLoginSerializer(data=request.data)
-               if serializer.is_valid():
-                   return Response({
-                       'status': 200,
-                       'message': 'User Created Successfully',
-                       'data': serializer.data
-                   })
-               return Response({
-                   'status': 400,
-                   'message': 'Error',
-                   'data': serializer.errors
-               })
-       except Exception as e:
-            print('%s' % type(e))
-            return Response({
-                'status': False,
-                'message': 'Something went wrong'
+    try:
+        if request.method == 'POST':
+            # pdb.set_trace()
 
+            data = request.data
+            if not data.get('email') == "":
+                if not data.get('password') == "":
+                    # obj = AdminDataTable.objects.get(email=data.get('email'))
+                    serializer = AdminLoginSerializer(data=request.data)
+                    if serializer.is_valid():
+                        return Response({
+                            'status': 200,
+                            'message': 'Login Successfully',
+                            'data': serializer.data
+                        })
+                    return Response({
+                        'status': 400,
+                        'message': 'Something went wrong',
+                        'data': serializer.errors
+                    })
+                return Response({
+                    'status': 400,
+                    'message': 'Error',
+                    'data': {'password': 'password doesn\'t matches'}
+                })
+            return Response({
+                'status': 400,
+                'message': 'Error',
+                'data': {'email': 'User doesn\'t exists'}
             })
 
+    except Exception as e:
+        print('%s' % type(e))
+        return Response({
+            'status': 400,
+            'message': 'Error',
+            'data' : 'User doesn\'t exists'
+        })
 
-class UploadHomeCms(viewsets.ModelViewSet):
-    parser_classes = (JSONParser, MultiPartParser)
-
-    # @action(detail=True, methods=['patch'])

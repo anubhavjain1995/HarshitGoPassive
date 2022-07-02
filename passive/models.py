@@ -60,7 +60,8 @@ class HomeCmsClientsSlider(WebBaseModel):
     profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
     text = models.TextField()
 
-class admin(WebBaseModel):
+
+class AdminDataTable(WebBaseModel):
     id = models.AutoField(primary_key=True)
     uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
     admin_type = models.IntegerField(default=1)
@@ -68,5 +69,5 @@ class admin(WebBaseModel):
     email = models.CharField(max_length=100,unique=True)
     password = models.CharField(max_length=255)
     profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
-    token = models.CharField(max_length=255,unique=True)
+    token = models.CharField(max_length=255,default='')
     
