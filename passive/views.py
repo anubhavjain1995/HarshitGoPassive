@@ -113,25 +113,29 @@ def admin_change_password(request):
                 'message': 'user_id is required',
                 'data': {}
             })
+        if not data.get('old_password'):
+            return Response({
+                'status': False,
+                'message': 'Old Password is required'
+            })
         obj = AdminDataTable.objects.get(uuid=data.get('uuid'))
         serializer = AdminSerializer(obj, data=data, partial=True)
         if serializer.is_valid():
             oldpass = obj.password
             newpass = data.get('password')
-
-            if oldpass == newpass:
-                return Response({
-                    'status': False,
-                    'message': 'Error',
-                    'error': 'Old and new passwords are same'
-                })
-            else:
-                serializer.save()
-                return Response({
-                    'status': True,
-                    'message': 'Password Changed Successfully'
-
-                })
+            if data.get('old_password') == oldpass:
+                if oldpass == newpass:
+                    return Response({
+                        'status': False,
+                        'message': 'Error',
+                        'error': 'Old and new passwords are same'
+                    })
+                else:
+                    serializer.save()
+                    return Response({
+                        'status': True,
+                        'message': 'Password Changed Successfully'
+                    })
         return Response({
             'status': False,
             'message': 'Error',
