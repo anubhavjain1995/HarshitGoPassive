@@ -43,7 +43,8 @@ class AdminRegistrationSerializet(serializers.ModelSerializer):
         if password != password2:
             raise serializers.ValidationError({'password': 'password doesn\'t matches'})
 
-        account.password = make_password(password)
+        # account.password = make_password(password)
+        account.password = password
 
         account.save()
         return account

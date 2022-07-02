@@ -142,3 +142,34 @@ def admin_change_password(request):
             'status': False,
             'message': 'Something went wrong'
         })
+
+
+@api_view(['POST', ])
+def admin_profile(request):
+    if request.method == 'POST':
+        todo_objs = AdminDataTable.objects.get(uuid=request.data.get('uuid'))
+        serializer = AdminSerializer(todo_objs)
+
+        return Response({
+            'status': 200,
+            'message': ' Retrived Successfully',
+            'data': serializer.data
+        })
+    else:
+        return Response({
+            'status': 400,
+            'message': 'Error',
+            'data': 'Method Not allowed'
+        })
+
+
+@api_view(['POST', ])
+def delete_user(request):
+    if request.method == 'POST':
+        user = AdminDataTable.objects.get(uuid=request.data.get('uuid'))
+        user.delete()
+        return Response({
+            'status': True,
+            'message': 'User Deleted'
+
+        })
