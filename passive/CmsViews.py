@@ -69,3 +69,4 @@ class CmsViews(APIView):
                 'status': False,
                 'message': 'Something went wrong'
             })
+

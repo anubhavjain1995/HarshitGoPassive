@@ -54,7 +54,7 @@ class AdminLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AdminDataTable
-        fields = ['email', 'password']
+        fields = ['email', 'password','admin_type','uuid','token']
 
     def validate(self, attrs):
         if not attrs.get('email') == "":

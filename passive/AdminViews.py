@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import AdminDataTable
-from .seiralizers import AdminSerializer,AdminRegistrationSerializet
+from .seiralizers import AdminSerializer, AdminRegistrationSerializet
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser, FileUploadParser
 
 
