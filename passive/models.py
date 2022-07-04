@@ -59,6 +59,7 @@ class HomeCmsClientsSlider(WebBaseModel):
     uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
     profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
     text = models.TextField()
+    username = models.CharField(max_length=100)
 
 
 class AdminDataTable(WebBaseModel):

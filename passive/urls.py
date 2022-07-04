@@ -4,7 +4,11 @@ from .views import *
 from .CmsViews import CmsViews
 from .AdminViews import AdminViews
 from django.conf import settings
+from .TestimonialViews import TestimonailViews
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+router = DefaultRouter()
+router.register(r'testimonial',TestimonailViews,basename='testimonial')
 
 urlpatterns = [
     path('' , home , name='home'),
@@ -19,3 +23,5 @@ urlpatterns = [
 
 
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+urlpatterns+= router.urls

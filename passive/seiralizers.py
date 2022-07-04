@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from .models import HomeCms, AdminDataTable
+from .models import HomeCms, AdminDataTable, HomeCmsClientsSlider
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -55,7 +55,7 @@ class AdminLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AdminDataTable
-        fields = ['email', 'password','admin_type','uuid','token']
+        fields = ['email', 'password', 'admin_type', 'uuid', 'token']
 
     def validate(self, attrs):
         if not attrs.get('email') == "":
@@ -67,3 +67,10 @@ class AdminLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'password': 'password doesn\'t matches'})
 
         raise serializers.ValidationError({'email': 'User doesn\'t exists'})
+
+
+class TestimonialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HomeCmsClientsSlider
+        # view all coloumns
+        fields = '__all__'
