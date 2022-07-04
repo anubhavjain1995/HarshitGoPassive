@@ -12,7 +12,22 @@ import pdb
 class TestimonailViews(viewsets.ModelViewSet):
     parser_classes = (FormParser, JSONParser, MultiPartParser, FileUploadParser)
 
+    serializer_class = TestimonialSerializer
     queryset = HomeCmsClientsSlider.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = TestimonialSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'status': 200,
+                'message': 'Created',
+                'data': serializer.data
+            })
+        return Response({
+            'status': 400,
+            'error': 'Something went wrong'
+        })
 
     def list(self, request):
         serializer = TestimonialSerializer(self.queryset, many=True)
@@ -28,8 +43,8 @@ class TestimonailViews(viewsets.ModelViewSet):
             'data': serializer.data
         })
 
-
-    def update(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def update_testimonial(self, request):
         data = request.data
         try:
             if not data.get('uuid'):
@@ -58,22 +73,25 @@ class TestimonailViews(viewsets.ModelViewSet):
                 'error': type(e)
             })
 
-    def retrieve(self, request, pk=None):
+    @action(detail=False, methods=['post'])
+    def get_user_testimonial(self, request):
         try:
-            uuid = request.data.get('uuid')
-            if not uuid:
+            data = request.data
+            # pdb.set_trace()
+            if not data.get('uuid'):
                 return Response({
                     'status': 400,
                     'message': 'uuid is required'
                 })
-            user = HomeCmsClientsSlider.objects.get(uuid=uuid)
+
+            user = HomeCmsClientsSlider.objects.get(uuid=data.get('uuid'))
             serializer = TestimonialSerializer(user)
+
             return Response({
                 'status': 200,
                 'message': 'Testimonial retrived Successfully',
                 'data': serializer.data
             })
-
         except Exception as e:
             return Response({
                 'status': 400,
@@ -81,7 +99,8 @@ class TestimonailViews(viewsets.ModelViewSet):
                 'error': str(e)
             })
 
-    def destroy(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def delete_testimonial(self, request):
         try:
             # pdb.set_trace()
             uuid = request.data.get('uuid')
@@ -90,7 +109,7 @@ class TestimonailViews(viewsets.ModelViewSet):
                     'status': 400,
                     'message': 'uuid is required'
                 })
-            user = HomeCmsClientsSlider.objects.get(uuid=uuid)
+            user = HomeCmsClientsSlider.objects.get(uuid=request.data.get('uuid'))
             user.delete()
             return Response({
                 'status': 200,
@@ -104,3 +123,5 @@ class TestimonailViews(viewsets.ModelViewSet):
                 'message': 'Error',
                 'error': str(e)
             })
+
+
