@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from .models import HomeCms, AdminDataTable, HomeCmsClientsSlider
+from .models import HomeCms, AdminDataTable, HomeCmsClientsSlider,UserTable
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -74,3 +74,58 @@ class TestimonialSerializer(serializers.ModelSerializer):
         model = HomeCmsClientsSlider
         # view all coloumns
         fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserTable
+        # view all coloumns
+        fields = '__all__'
+
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = UserTable
+        fields = ['username', 'email', 'password', 'user_type', 'password2', ]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def save(self):
+        account = UserTable(email=self.validated_data['email'],
+                                 username=self.validated_data['username'],
+                                 user_type=self.validated_data['user_type'],
+                                 )
+        password = self.validated_data['password']
+        password2 = self.validated_data['password2']
+
+        if password != password2:
+            raise serializers.ValidationError({'password': 'password doesn\'t matches'})
+
+        # account.password = make_password(password)
+        account.password = password
+
+        account.save()
+        return account
+
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=255)
+
+    class Meta:
+        model = UserTable
+        fields = ['email', 'password', 'user_type', 'uuid', 'token']
+
+    def validate(self, attrs):
+        if not attrs.get('email') == "":
+            email = UserTable.objects.filter(email=attrs.get('email')).count()
+            if email > 0:
+                account = UserTable.objects.get(email=attrs.get('email'), password=attrs.get('password'))
+                return account
+
+            raise serializers.ValidationError({'password': 'password doesn\'t matches'})
+
+        raise serializers.ValidationError({'email': 'User doesn\'t exists'})

@@ -71,4 +71,17 @@ class AdminDataTable(WebBaseModel):
     password = models.CharField(max_length=255)
     profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
     token = models.CharField(max_length=255,default='')
-    
+
+
+class UserTable(WebBaseModel):
+    id = models.AutoField(primary_key=True)
+    uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
+    user_type = models.IntegerField(default=0)
+    username = models.CharField(max_length=100)
+    email = models.CharField(max_length=100,unique=True)
+    password = models.CharField(max_length=255)
+    profile_image = models.ImageField(upload_to="profile_pictures",blank=True)
+    token = models.CharField(max_length=255,default='')
+    address = models.CharField(max_length=255)
+    contact_no = models.CharField(max_length=13)
+    status = models.BooleanField(default=True)
