@@ -2,9 +2,10 @@ from rest_framework.decorators import api_view, action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status, viewsets, request
-from .models import HomeCms, AdminDataTable,UserTable
+from .models import HomeCms, AdminDataTable, UserTable
 from django.contrib.auth import authenticate
-from .seiralizers import HomeSerializer, AdminRegistrationSerializet, AdminLoginSerializer, AdminSerializer,UserSerializer,UserRegistrationSerializer,UserLoginSerializer
+from .seiralizers import HomeSerializer, AdminRegistrationSerializet, AdminLoginSerializer, AdminSerializer, \
+    UserSerializer, UserRegistrationSerializer, UserLoginSerializer
 import pdb;
 
 
@@ -179,7 +180,7 @@ def delete_user(request):
         })
 
 
-#Agent and User Registration
+# Agent and User Registration
 
 @api_view(['POST', ])
 def user_registration(request):
@@ -296,4 +297,27 @@ def user_change_password(request):
         })
 
 
+@api_view(['POST', ])
+def user_profile(request):
+    try:
+        if request.method == 'POST':
+            todo_objs = UserTable.objects.get(uuid=request.data.get('uuid'))
+            serializer = UserSerializer(todo_objs)
 
+            return Response({
+                'status': 200,
+                'message': ' Retrived Successfully',
+                'data': serializer.data
+            })
+        else:
+            return Response({
+                'status': 400,
+                'message': 'Error',
+                'data': 'Method Not allowed'
+            })
+    except Exception as e:
+        return Response({
+                'status': 400,
+                'message': 'Error',
+                'data': str(e)
+            })

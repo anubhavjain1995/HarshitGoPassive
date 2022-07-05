@@ -20,6 +20,7 @@ urlpatterns = [
     path('user_change_password' , user_change_password , name='user_change_password'),
     path('user_login' , userLogin , name='userLogin'),
     path('user_registration' , user_registration , name='user_registration'),
+    path('user_profile' , user_profile , name='user_profile'),
 
     path('home-cms/',CmsViews.as_view()),
     path('admin/',AdminViews.as_view()),
