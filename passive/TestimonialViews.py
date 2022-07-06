@@ -99,29 +99,29 @@ class TestimonailViews(viewsets.ModelViewSet):
                 'error': str(e)
             })
 
-    @action(detail=False, methods=['post'])
-    def delete_testimonial(self, request):
-        try:
-            # pdb.set_trace()
-            uuid = request.data.get('uuid')
-            if not uuid:
-                return Response({
-                    'status': consts.Error,
-                    'message': 'uuid is required'
-                })
-            user = HomeCmsClientsSlider.objects.get(uuid=request.data.get('uuid'))
-            user.delete()
-            return Response({
-                'status': consts.Success,
-                'message': 'Testimonial Deleted Successfully',
-
-            })
-
-        except Exception as e:
-            return Response({
-                'status': consts.Error,
-                'message': 'Error',
-                'error': str(e)
-            })
+    # @action(detail=False, methods=['post'])
+    # def delete_testimonial(self, request):
+    #     try:
+    #         # pdb.set_trace()
+    #         uuid = request.data.get('uuid')
+    #         if not uuid:
+    #             return Response({
+    #                 'status': consts.Error,
+    #                 'message': 'uuid is required'
+    #             })
+    #         user = HomeCmsClientsSlider.objects.get(uuid=request.data.get('uuid'))
+    #         user.delete()
+    #         return Response({
+    #             'status': consts.Success,
+    #             'message': 'Testimonial Deleted Successfully',
+    #
+    #         })
+    #
+    #     except Exception as e:
+    #         return Response({
+    #             'status': consts.Error,
+    #             'message': 'Error',
+    #             'error': str(e)
+    #         })
 
 

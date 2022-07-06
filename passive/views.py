@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status, viewsets, request
-from .models import HomeCms, AdminDataTable, UserTable
+from .models import HomeCms, AdminDataTable, UserTable,HomeCmsClientsSlider
 from django.contrib.auth import authenticate
 from .seiralizers import HomeSerializer, AdminRegistrationSerializet, AdminLoginSerializer, AdminSerializer, \
     UserSerializer, UserRegistrationSerializer, UserLoginSerializer
@@ -321,3 +321,14 @@ def user_profile(request,pk):
                 'message': 'Error',
                 'data': str(e)
             })
+
+
+@api_view(['DELETE'],)
+def delete_testimonial(request,pk):
+    if request.method == 'DELETE':
+        user = HomeCmsClientsSlider.objects.get(uuid=pk)
+        user.delete()
+        return Response({
+            'status': consts.Success,
+            'message': 'Testimonial Deleted'
+        })

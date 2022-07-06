@@ -21,6 +21,7 @@ urlpatterns = [
     path('user_login' , userLogin , name='userLogin'),#post
     path('user_registration' , user_registration , name='user_registration'),#post
     path('user_profile/<str:pk>/' , user_profile , name='user_profile'),#get
+    path('delete_testimonial/<str:pk>/' , delete_testimonial , name='delete_testimonial'),#delete
 
     path('home-cms/',CmsViews.as_view()),#post,get
     path('admin/',AdminViews.as_view()),#post,get
