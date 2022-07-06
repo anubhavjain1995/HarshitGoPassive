@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from .models import HomeCms
 from .seiralizers import HomeSerializer
 from rest_framework.parsers import FormParser,JSONParser, MultiPartParser,FileUploadParser
-
+from .consts import *
 
 class CmsViews(APIView):
     parser_classes = (FormParser,JSONParser, MultiPartParser,FileUploadParser)
@@ -13,7 +13,7 @@ class CmsViews(APIView):
         serializer = HomeSerializer(todo_objs, many=True)
 
         return Response({
-            'status': 200,
+            'status': consts.Success,
             'message': 'Home Retrived Successfully',
             'data': serializer.data
         })
@@ -26,18 +26,18 @@ class CmsViews(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status': 200,
+                    'status': consts.Success,
                     'message': 'Data Created Successfully',
                     'data': serializer.data
                 })
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'error': serializer.errors
             })
         except Exception as e:
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Something went wrong'
             })
 
@@ -46,7 +46,7 @@ class CmsViews(APIView):
             data = request.data
             if not data.get('id'):
                 return Response({
-                    'status': False,
+                    'status': consts.Error,
                     'message': 'id is required',
                     'data': {}
                 })
@@ -55,18 +55,18 @@ class CmsViews(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status': True,
+                    'status': consts.Success,
                     'message': 'HomeCms Updated Successfully',
                     'data': serializer.data
                 })
             return Response({
-                'status': False,
+                'status': consts.Error,
                 'message': 'Error',
                 'error': serializer.errors
             })
         except Exception as e:
             return Response({
-                'status': False,
+                'status': consts.Error,
                 'message': 'Something went wrong'
             })
 

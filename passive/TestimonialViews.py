@@ -1,4 +1,3 @@
-from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser, FileUploadParser
@@ -6,6 +5,7 @@ from rest_framework.response import Response
 
 from .models import HomeCmsClientsSlider
 from .seiralizers import TestimonialSerializer
+from .consts import *
 import pdb
 
 
@@ -20,12 +20,12 @@ class TestimonailViews(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                'status': 200,
+                'status': consts.Success,
                 'message': 'Created',
                 'data': serializer.data
             })
         return Response({
-            'status': 400,
+            'status': consts.Error,
             'error': 'Something went wrong'
         })
 
@@ -33,12 +33,12 @@ class TestimonailViews(viewsets.ModelViewSet):
         serializer = TestimonialSerializer(self.queryset, many=True)
         if self.queryset.exists():
             return Response({
-                'status': 200,
+                'status': consts.Success,
                 'message': 'Retrived',
                 'data': serializer.data
             })
         return Response({
-            'status': 200,
+            'status': consts.Success,
             'message': 'No data found',
             'data': serializer.data
         })
@@ -49,7 +49,7 @@ class TestimonailViews(viewsets.ModelViewSet):
         try:
             if not data.get('uuid'):
                 return Response({
-                    'status': 400,
+                    'status': consts.Error,
                     'message': 'uuid is required'
                 })
             obj = HomeCmsClientsSlider.objects.get(uuid=data.get('uuid'))
@@ -57,18 +57,18 @@ class TestimonailViews(viewsets.ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status': 200,
+                    'status': consts.Success,
                     'message': 'Testimonial Updated Successfully',
                     'data': serializer.data
                 })
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'error': serializer.errors
             })
         except Exception as e:
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'error': type(e)
             })
@@ -80,7 +80,7 @@ class TestimonailViews(viewsets.ModelViewSet):
             # pdb.set_trace()
             if not data.get('uuid'):
                 return Response({
-                    'status': 400,
+                    'status': consts.Error,
                     'message': 'uuid is required'
                 })
 
@@ -88,13 +88,13 @@ class TestimonailViews(viewsets.ModelViewSet):
             serializer = TestimonialSerializer(user)
 
             return Response({
-                'status': 200,
+                'status': consts.Success,
                 'message': 'Testimonial retrived Successfully',
                 'data': serializer.data
             })
         except Exception as e:
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'error': str(e)
             })
@@ -106,20 +106,20 @@ class TestimonailViews(viewsets.ModelViewSet):
             uuid = request.data.get('uuid')
             if not uuid:
                 return Response({
-                    'status': 400,
+                    'status': consts.Error,
                     'message': 'uuid is required'
                 })
             user = HomeCmsClientsSlider.objects.get(uuid=request.data.get('uuid'))
             user.delete()
             return Response({
-                'status': 200,
+                'status': consts.Success,
                 'message': 'Testimonial Deleted Successfully',
 
             })
 
         except Exception as e:
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'error': str(e)
             })

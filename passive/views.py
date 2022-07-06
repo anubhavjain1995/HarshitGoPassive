@@ -6,7 +6,7 @@ from .models import HomeCms, AdminDataTable, UserTable
 from django.contrib.auth import authenticate
 from .seiralizers import HomeSerializer, AdminRegistrationSerializet, AdminLoginSerializer, AdminSerializer, \
     UserSerializer, UserRegistrationSerializer, UserLoginSerializer
-import pdb;
+from .consts import *
 
 
 # Create your views here.
@@ -24,12 +24,12 @@ def uploadCms(request):
     if serializer_class.is_valid():
         serializer_class.save()
         return Response({
-            'status': 200,
+            'status': consts.Success,
             'data': serializer_class.data
         })
     else:
         return Response({
-            'status': 200,
+            'status': consts.Error,
             'data': serializer_class.errors
         })
 
@@ -43,19 +43,19 @@ def registration(request):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status': 200,
+                    'status': consts.Success,
                     'message': 'User Created Successfully',
                     'data': serializer.data
                 })
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'data': serializer.errors
             })
     except Exception as e:
         print('%s' % type(e))
         return Response({
-            'status': False,
+            'status': consts.Error,
             'message': 'Something went wrong'
 
         })
@@ -74,22 +74,22 @@ def adminLogin(request):
                     serializer = AdminLoginSerializer(data=request.data)
                     if serializer.is_valid():
                         return Response({
-                            'status': 200,
+                            'status': consts.Success,
                             'message': 'Login Successfully',
                             'data': serializer.data
                         })
                     return Response({
-                        'status': 400,
+                        'status': consts.Error,
                         'message': 'Something went wrong',
                         'data': serializer.errors
                     })
                 return Response({
-                    'status': 400,
+                    'status': consts.Error,
                     'message': 'Error',
                     'data': {'password': 'password doesn\'t matches'}
                 })
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'data': {'email': 'User doesn\'t exists'}
             })
@@ -97,7 +97,7 @@ def adminLogin(request):
     except Exception as e:
         print('%s' % type(e))
         return Response({
-            'status': 400,
+            'status': consts.Error,
             'message': 'Error',
             'data': 'User doesn\'t exists'
         })
@@ -110,13 +110,13 @@ def admin_change_password(request):
         # pdb.set_trace()
         if not data.get('uuid'):
             return Response({
-                'status': False,
+                'status': consts.Error,
                 'message': 'user_id is required',
                 'data': {}
             })
         if not data.get('old_password'):
             return Response({
-                'status': False,
+                'status': consts.Error,
                 'message': 'Old Password is required'
             })
         obj = AdminDataTable.objects.get(uuid=data.get('uuid'))
@@ -127,54 +127,54 @@ def admin_change_password(request):
             if data.get('old_password') == oldpass:
                 if oldpass == newpass:
                     return Response({
-                        'status': False,
+                        'status': consts.Error,
                         'message': 'Error',
                         'error': 'Old and new passwords are same'
                     })
                 else:
                     serializer.save()
                     return Response({
-                        'status': True,
+                        'status': consts.Success,
                         'message': 'Password Changed Successfully'
                     })
         return Response({
-            'status': False,
+            'status': consts.Error,
             'message': 'Error',
             'error': serializer.errors
         })
     except Exception as e:
         return Response({
-            'status': False,
+            'status': consts.Error,
             'message': 'Something went wrong'
         })
 
 
-@api_view(['POST', ])
-def admin_profile(request):
-    if request.method == 'POST':
-        todo_objs = AdminDataTable.objects.get(uuid=request.data.get('uuid'))
-        serializer = AdminSerializer(todo_objs)
+@api_view(['GET', ])
+def admin_profile(request,pk):
+    if request.method == 'GET':
+        todo_objs = AdminDataTable.objects.get(uuid=pk)
+        serializer = AdminSerializer(todo_objs,many=False)
 
         return Response({
-            'status': 200,
+            'status': consts.Success,
             'message': ' Retrived Successfully',
             'data': serializer.data
         })
     else:
         return Response({
-            'status': 400,
+            'status': consts.Error,
             'message': 'Error',
             'data': 'Method Not allowed'
         })
 
 
-@api_view(['POST', ])
-def delete_user(request):
-    if request.method == 'POST':
-        user = AdminDataTable.objects.get(uuid=request.data.get('uuid'))
+@api_view(['DELETE', ])
+def delete_user(request,pk):
+    if request.method == 'DELETE':
+        user = AdminDataTable.objects.get(uuid=pk)
         user.delete()
         return Response({
-            'status': True,
+            'status': consts.Success,
             'message': 'User Deleted'
 
         })
@@ -191,19 +191,19 @@ def user_registration(request):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status': 200,
+                    'status': consts.Success,
                     'message': 'User Created Successfully',
                     'data': serializer.data
                 })
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'data': serializer.errors
             })
     except Exception as e:
         print('%s' % type(e))
         return Response({
-            'status': False,
+            'status': consts.Error,
             'message': 'Something went wrong'
 
         })
@@ -222,22 +222,22 @@ def userLogin(request):
                     serializer = UserLoginSerializer(data=request.data)
                     if serializer.is_valid():
                         return Response({
-                            'status': 200,
+                            'status': consts.Success,
                             'message': 'Login Successfully',
                             'data': serializer.data
                         })
                     return Response({
-                        'status': 400,
+                        'status': consts.Error,
                         'message': 'Something went wrong',
                         'data': serializer.errors
                     })
                 return Response({
-                    'status': 400,
+                    'status': consts.Error,
                     'message': 'Error',
                     'data': {'password': 'password doesn\'t matches'}
                 })
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'data': {'email': 'User doesn\'t exists'}
             })
@@ -245,7 +245,7 @@ def userLogin(request):
     except Exception as e:
         print('%s' % type(e))
         return Response({
-            'status': 400,
+            'status': consts.Error,
             'message': 'Error',
             'data': 'User doesn\'t exists'
         })
@@ -258,13 +258,13 @@ def user_change_password(request):
         # pdb.set_trace()
         if not data.get('uuid'):
             return Response({
-                'status': False,
+                'status': consts.Error,
                 'message': 'user_id is required',
                 'data': {}
             })
         if not data.get('old_password'):
             return Response({
-                'status': False,
+                'status': consts.Error,
                 'message': 'Old Password is required'
             })
         obj = UserTable.objects.get(uuid=data.get('uuid'))
@@ -275,49 +275,49 @@ def user_change_password(request):
             if data.get('old_password') == oldpass:
                 if oldpass == newpass:
                     return Response({
-                        'status': False,
+                        'status': consts.Error,
                         'message': 'Error',
                         'error': 'Old and new passwords are same'
                     })
                 else:
                     serializer.save()
                     return Response({
-                        'status': True,
+                        'status': consts.Success,
                         'message': 'Password Changed Successfully'
                     })
         return Response({
-            'status': False,
+            'status': consts.Error,
             'message': 'Error',
             'error': serializer.errors
         })
     except Exception as e:
         return Response({
-            'status': False,
+            'status': consts.Error,
             'message': 'Something went wrong'
         })
 
 
-@api_view(['POST', ])
-def user_profile(request):
+@api_view(['GET', ])
+def user_profile(request,pk):
     try:
-        if request.method == 'POST':
-            todo_objs = UserTable.objects.get(uuid=request.data.get('uuid'))
-            serializer = UserSerializer(todo_objs)
+        if request.method == 'GET':
+            todo_objs = UserTable.objects.get(uuid=pk)
+            serializer = UserSerializer(todo_objs,many=False)
 
             return Response({
-                'status': 200,
+                'status': consts.Success,
                 'message': ' Retrived Successfully',
                 'data': serializer.data
             })
         else:
             return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'data': 'Method Not allowed'
             })
     except Exception as e:
         return Response({
-                'status': 400,
+                'status': consts.Error,
                 'message': 'Error',
                 'data': str(e)
             })
