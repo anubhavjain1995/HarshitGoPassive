@@ -5,10 +5,12 @@ from .CmsViews import CmsViews
 from .AdminViews import AdminViews
 from django.conf import settings
 from .TestimonialViews import TestimonailViews
+from .UserAgentViews import UserAgentViews
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'testimonial',TestimonailViews,basename='testimonial')
+router.register(r'user_agent',UserAgentViews,basename='testimonial')
 
 urlpatterns = [
     path('' , home , name='home'),
