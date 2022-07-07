@@ -18,7 +18,7 @@ class UserAgentViews(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def get_user_agents(self, request):
         try:
-            queryset = UserTable.objects.filter(user_type=request.data.get('user_type'))
+            queryset = UserTable.objects.filter(user_type=request.data.get('user_type')).order_by('-id')
             serializer = UserSerializer(queryset, many=True)
             if queryset.exists():
                 return Response({

@@ -88,7 +88,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserTable
-        fields = ['username', 'email', 'password', 'user_type', 'password2', ]
+        fields='__all__'
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -97,6 +97,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         account = UserTable(email=self.validated_data['email'],
                                  username=self.validated_data['username'],
                                  user_type=self.validated_data['user_type'],
+                                 contact_no=self.validated_data['contact_no'],
+                                 address=self.validated_data['address'],
+                                 profile_image=self.validated_data['profile_image']
                                  )
         password = self.validated_data['password']
         password2 = self.validated_data['password2']
