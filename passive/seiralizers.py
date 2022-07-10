@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from .models import HomeCms, AdminDataTable, HomeCmsClientsSlider,UserTable
+from .models import HomeCms, AdminDataTable, HomeCmsClientsSlider,UserTable,UserLeadsTable,ChangesRequestTable
 from django.contrib.auth.hashers import make_password, check_password
 
 
@@ -114,7 +114,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return account
 
 
-
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255)
 
@@ -132,3 +131,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'password': 'password doesn\'t matches'})
 
         raise serializers.ValidationError({'email': 'User doesn\'t exists'})
+
+
+#leads
+class UserLeadsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserLeadsTable
+        fields = '__all__'
+
+#request form
+class ChangesRequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ChangesRequestTable
+        fields = '__all__'

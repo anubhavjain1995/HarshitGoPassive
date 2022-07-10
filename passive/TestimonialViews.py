@@ -16,6 +16,7 @@ class TestimonailViews(viewsets.ModelViewSet):
     queryset = HomeCmsClientsSlider.objects.all()
 
     def create(self, request, *args, **kwargs):
+        # pdb.set_trace()
         serializer = TestimonialSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -30,8 +31,10 @@ class TestimonailViews(viewsets.ModelViewSet):
         })
 
     def list(self, request):
-        serializer = TestimonialSerializer(self.queryset, many=True)
-        if self.queryset.exists():
+        # pdb.set_trace()
+        queryset = HomeCmsClientsSlider.objects.all().order_by('-id')
+        serializer = TestimonialSerializer(queryset, many=True)
+        if queryset.exists():
             return Response({
                 'status': consts.Success,
                 'message': 'Retrived',

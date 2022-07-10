@@ -24,3 +24,6 @@ pip install pillow
 
 //install jwt
 pip install djangorestframework_simplejwt
+
+//install corsheaders
+python  pip install django-cors-headers

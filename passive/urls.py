@@ -6,11 +6,15 @@ from .AdminViews import AdminViews
 from django.conf import settings
 from .TestimonialViews import TestimonailViews
 from .UserAgentViews import UserAgentViews
+from .ChangesRequestView import ChangesRequestView
+from .LeadsViews import LeadsViews
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r'testimonial',TestimonailViews,basename='testimonial')
 router.register(r'user_agent',UserAgentViews,basename='testimonial')
+router.register(r'leads',LeadsViews,basename='leads')
+router.register(r'update_request',ChangesRequestView,basename='update_requests')
 
 urlpatterns = [
     path('' , home , name='home'),
