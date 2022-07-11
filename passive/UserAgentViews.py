@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser, FileUploadParser
 from rest_framework.response import Response
-
+from django.core.paginator import  Paginator,EmptyPage
 from .models import UserTable
 from .seiralizers import UserSerializer
 from .consts import *
@@ -18,13 +18,37 @@ class UserAgentViews(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'])
     def get_user_agents(self, request):
         try:
-            queryset = UserTable.objects.filter(user_type=request.data.get('user_type')).order_by('-id')
-            serializer = UserSerializer(queryset, many=True)
+            # pdb.set_trace()
+            queryset = UserTable.objects.filter(user_type=request.data.get('user_type')).order_by('-id').values()
+            # serializer = UserSerializer(queryset, many=True)
+            paginator = Paginator(queryset,2)
+            page_number = request.GET.get('page')
+            try:
+                data_final = paginator.get_page(page_number)
+            except EmptyPage:
+                data_final = paginator.get_page(1)
+            serializer = UserSerializer(data_final,many=True)
+
+            pre_page=0
+            if data_final.has_previous():
+                pre_page = data_final.previous_page_number()
+
+            pagination = {'current_page': page_number,
+                          'next_page': data_final.next_page_number(),
+                          'previous_page': pre_page,
+                          'is_next_page' : data_final.has_next(),
+                          'total_entries': queryset.count()}
+
+            data_val={}
+            data_val['pagination'] = pagination
+            data_val['data'] = serializer.data
+
+
             if queryset.exists():
                 return Response({
                     'status': consts.Success,
                     'message': 'Retrived',
-                    'data': serializer.data
+                    'data': data_val
                 })
             return Response({
                 'status': consts.Success,

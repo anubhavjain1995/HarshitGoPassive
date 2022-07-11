@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser, FileUploadParser
 from rest_framework.response import Response
-
+from django.core.paginator import Paginator,EmptyPage
 from .models import HomeCmsClientsSlider
 from .seiralizers import TestimonialSerializer
 from .consts import *
@@ -33,12 +33,31 @@ class TestimonailViews(viewsets.ModelViewSet):
     def list(self, request):
         # pdb.set_trace()
         queryset = HomeCmsClientsSlider.objects.all().order_by('-id')
-        serializer = TestimonialSerializer(queryset, many=True)
+        paginator = Paginator(queryset,2)
+        page_number = request.GET.get('page')
+        try:
+            datafinal = paginator.get_page(page_number)
+        except EmptyPage:
+            datafinal = paginator.get_page(1)
+
+        serializer = TestimonialSerializer(datafinal, many=True)
+        pre_page=0
+        if datafinal.has_previous():
+            pre_page = datafinal.previous_page_number()
+        pagination = {'current_page':page_number,
+                      'next_page': datafinal.next_page_number(),
+                      'previous_page': pre_page,
+                      'is_next_page': datafinal.has_next(),
+                      'total_entries': queryset.count()}
+        data_val = {}
+        data_val['pagination'] = pagination
+        data_val['data'] = serializer.data
+
         if queryset.exists():
             return Response({
                 'status': consts.Success,
                 'message': 'Retrived',
-                'data': serializer.data
+                'data': data_val
             })
         return Response({
             'status': consts.Success,

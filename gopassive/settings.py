@@ -62,6 +62,10 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOWED_ORIGIN_REGEXES = [
     'http://localhost:3030',
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': ('rest_framework.pagination.PageNumberPagination',),
+    'PAGE_SIZE': 10,
+}
 
 ROOT_URLCONF = 'gopassive.urls'
 
