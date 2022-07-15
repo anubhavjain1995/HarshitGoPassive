@@ -1,17 +1,13 @@
 from rest_framework.decorators import api_view, action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework import status, viewsets, request
-from .models import HomeCms, AdminDataTable, UserTable,HomeCmsClientsSlider
-from django.contrib.auth import authenticate
+from .models import HomeCms, AdminDataTable, UserTable, HomeCmsClientsSlider
 from .seiralizers import HomeSerializer, AdminRegistrationSerializet, AdminLoginSerializer, AdminSerializer, \
     UserSerializer, UserRegistrationSerializer, UserLoginSerializer
 from .consts import *
 
 
 # Create your views here.
-
-
 @api_view()
 def home(request):
     return Response({"message": "Hello, world!"})
@@ -332,3 +328,4 @@ def delete_testimonial(request,pk):
             'status': consts.Success,
             'message': 'Testimonial Deleted'
         })
+

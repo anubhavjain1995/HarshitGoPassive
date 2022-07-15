@@ -1,9 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.core.paginator import Paginator,EmptyPage
-from .seiralizers import ChangesRequestSerializer,UserSerializer
-from .models import ChangesRequestTable,UserTable
+from django.core.paginator import Paginator, EmptyPage
+from .seiralizers import ChangesRequestSerializer, UserSerializer
+from .models import ChangesRequestTable, UserTable
 from .consts import *
 import pdb
 
@@ -21,10 +21,11 @@ class ChangesRequestView(viewsets.ModelViewSet):
                 'message': 'Request Submitted',
                 'data': serializer.data
             })
-        return Response({
-            'status': consts.Error,
-            'error': 'Something went wrong'
-        })
+        else:
+            return Response({
+                'status': consts.Error,
+                'error': 'Something went wrong'
+            })
 
     def list(self, request):
         # pdb.set_trace()
@@ -33,7 +34,7 @@ class ChangesRequestView(viewsets.ModelViewSet):
             serializer = ChangesRequestSerializer(queryset, many=True)
 
             a = []
-            user_email=''
+            user_email = ''
             for i in range(len(serializer.data)):
                 uuid = serializer.data[i]['uuid']
                 user = UserTable.objects.get(uuid=uuid)
@@ -42,7 +43,7 @@ class ChangesRequestView(viewsets.ModelViewSet):
                 resp = {"email": user_email,
                         "message": serializer.data[i]['message'],
                         'is_done': serializer.data[i]['is_done'],
-                        'created_at' : serializer.data[i]['created_at']}
+                        'created_at': serializer.data[i]['created_at']}
                 a.append(resp)
             if queryset.exists():
                 return Response({
@@ -61,7 +62,6 @@ class ChangesRequestView(viewsets.ModelViewSet):
                 'message': 'Error',
                 'error': type(e)
             })
-
 
     @action(detail=False, methods=['patch'])
     def update_request(self, request):

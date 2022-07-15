@@ -93,7 +93,7 @@ class UserLeadsTable(WebBaseModel):
     id = models.AutoField(primary_key=True)
     uuid = models.UUIDField(editable=False, default=uuid.uuid4, unique=True)
     username = models.CharField(max_length=100)
-    email = models.CharField(max_length=100,unique=True)
+    email = models.CharField(max_length=100)
     address = models.CharField(max_length=255)
     contact_no = models.CharField(max_length=13)
     message = models.CharField(max_length=100)

@@ -40,7 +40,7 @@ class LeadsViews(viewsets.ModelViewSet):
         # pdb.set_trace()
         try:
             queryset = UserLeadsTable.objects.all().order_by('-id')
-            paginator = Paginator(queryset,2)
+            paginator = Paginator(queryset,4)
             page_number = request.GET.get('page')
             try:
                 datafinal = paginator.get_page(page_number)
@@ -54,11 +54,11 @@ class LeadsViews(viewsets.ModelViewSet):
                           'next_page': datafinal.next_page_number(),
                           'previous_page': pre_page,
                           'is_next_page': datafinal.has_next(),
-                          'total_entries': queryset.count()}
+                          'total_entries': queryset.count()
+                          }
             data_val = {}
             data_val['pagination'] = pagination
             data_val['data'] = serializer.data
-
             if queryset.exists():
                 return Response({
                     'status': consts.Success,
@@ -76,3 +76,5 @@ class LeadsViews(viewsets.ModelViewSet):
                 'message': 'Error',
                 'data': str(e)
             })
+
+
