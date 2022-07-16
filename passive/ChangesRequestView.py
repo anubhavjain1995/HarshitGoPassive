@@ -40,7 +40,9 @@ class ChangesRequestView(viewsets.ModelViewSet):
                 user = UserTable.objects.get(uuid=uuid)
                 user_serializer = UserSerializer(user)
                 user_email = user_serializer.data.get('email')
+                user_name = user_serializer.data.get('username')
                 resp = {"email": user_email,
+                        "username": user_name,
                         "message": serializer.data[i]['message'],
                         'is_done': serializer.data[i]['is_done'],
                         'created_at': serializer.data[i]['created_at']}
