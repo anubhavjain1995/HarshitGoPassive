@@ -95,8 +95,8 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres', #postgres for dev
-        'USER': 'postgres',
+        'NAME': 'gopassive_dev', #postgres for dev
+        'USER': 'gopassive_dev',
         'PASSWORD': 'anubhav',
         'HOST': 'localhost',
         'PORT': 5432,
