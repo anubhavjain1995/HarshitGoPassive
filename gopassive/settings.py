@@ -92,14 +92,14 @@ WSGI_APPLICATION = 'gopassive.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gopassive_dev', #postgres for dev
-        'USER': 'gopassive_dev',
-        'PASSWORD': 'anubhav',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'gopassive_dev', #postgres for dev
+        # 'USER': 'gopassive_dev',
+        # 'PASSWORD': 'anubhav',
+        # 'HOST': 'localhost',
+        # 'PORT': 5432,
     }
 }
 
