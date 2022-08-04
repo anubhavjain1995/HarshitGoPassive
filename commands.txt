@@ -27,3 +27,16 @@ pip install djangorestframework_simplejwt
 
 //install corsheaders
 python  pip install django-cors-headers
+
+//install cryptography
+pip install cryptography
+
+//for cloud storage
+pip install django-storages
+
+//awscli
+pip install awscli
+aws configure
+
+//boto3
+pip install boto3

@@ -33,6 +33,7 @@ urlpatterns = [
     path('admin/',AdminViews.as_view()),#post,get
 
 
+
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
 urlpatterns+= router.urls

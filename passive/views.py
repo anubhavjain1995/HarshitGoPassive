@@ -1,10 +1,13 @@
 from rest_framework.decorators import api_view, action
 from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import HomeCms, AdminDataTable, UserTable, HomeCmsClientsSlider
 from .seiralizers import HomeSerializer, AdminRegistrationSerializet, AdminLoginSerializer, AdminSerializer, \
     UserSerializer, UserRegistrationSerializer, UserLoginSerializer
 from .consts import *
+import pdb
 
 
 # Create your views here.
@@ -210,13 +213,12 @@ def userLogin(request):
     try:
         if request.method == 'POST':
             # pdb.set_trace()
-
             data = request.data
             if not data.get('email') == "":
                 if not data.get('password') == "":
                     # obj = AdminDataTable.objects.get(email=data.get('email'))
                     serializer = UserLoginSerializer(data=request.data)
-                    if serializer.is_valid():
+                    if serializer.is_valid(raise_exception=True):
                         return Response({
                             'status': consts.Success,
                             'message': 'Login Successfully',

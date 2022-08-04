@@ -67,6 +67,7 @@ class CmsViews(APIView):
         except Exception as e:
             return Response({
                 'status': consts.Error,
-                'message': 'Something went wrong'
+                'message': 'Something went wrong',
+                'error' : str(e)
             })
 

@@ -47,11 +47,21 @@ class ChangesRequestView(viewsets.ModelViewSet):
                         'is_done': serializer.data[i]['is_done'],
                         'created_at': serializer.data[i]['created_at']}
                 a.append(resp)
+
+            if request.GET.get('page'):
+                page_number = request.GET.get('page')
+            else:
+                page_number = 1
+            paginator = Paginator(a, 10)
+            if int(page_number) > paginator.num_pages:
+                raise ValidationError("Not enough pages", code=404)
+
+
             if queryset.exists():
                 return Response({
                     'status': consts.Success,
                     'message': 'Retrived',
-                    'data': a
+                    'data': consts.paginate(a,paginator,page_number)
                 })
             return Response({
                 'status': consts.Success,

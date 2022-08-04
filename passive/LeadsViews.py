@@ -40,30 +40,29 @@ class LeadsViews(viewsets.ModelViewSet):
         # pdb.set_trace()
         try:
             queryset = UserLeadsTable.objects.all().order_by('-id')
-            paginator = Paginator(queryset,4)
-            page_number = request.GET.get('page')
+            paginator = Paginator(queryset,10)
+
+            if request.GET.get('page'):
+                page_number = request.GET.get('page')
+            else:
+                page_number = 1
+
+
+            if int(page_number) > paginator.num_pages:
+                raise ValidationError("Not enough pages", code=404)
             try:
                 datafinal = paginator.get_page(page_number)
             except EmptyPage:
                 datafinal = paginator.get_page(1)
+
             serializer = UserLeadsSerializer(datafinal, many=True)
-            pre_page = 0
-            if datafinal.has_previous():
-                pre_page = datafinal.previous_page_number()
-            pagination = {'current_page': page_number,
-                          'next_page': datafinal.next_page_number(),
-                          'previous_page': pre_page,
-                          'is_next_page': datafinal.has_next(),
-                          'total_entries': queryset.count()
-                          }
-            data_val = {}
-            data_val['pagination'] = pagination
-            data_val['data'] = serializer.data
+
+
             if queryset.exists():
                 return Response({
                     'status': consts.Success,
                     'message': 'Retrived',
-                    'data': data_val
+                    'data': consts.paginate(serializer.data,paginator,page_number)
                 })
             return Response({
                 'status': consts.Success,

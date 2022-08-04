@@ -103,4 +103,4 @@ class ChangesRequestTable(WebBaseModel):
     id = models.AutoField(primary_key=True)
     uuid = models.UUIDField()
     message = models.CharField(max_length=100)
-    is_done = models.BooleanField(default=False)
+    is_done = models.IntegerField(default=0)

@@ -71,3 +71,12 @@ class AdminViews(APIView):
                 'message': 'Something went wrong'
             })
 
+    def delete(self,req,pk,format=None):
+        if req.method == 'DELETE':
+            user = AdminDataTable.objects.get(uuid=pk)
+            user.delete()
+            return Response({
+                'status': consts.Success,
+                'message': 'Admin Deleted'
+            })
+

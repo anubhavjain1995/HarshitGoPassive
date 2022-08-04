@@ -33,31 +33,29 @@ class TestimonailViews(viewsets.ModelViewSet):
     def list(self, request):
         # pdb.set_trace()
         queryset = HomeCmsClientsSlider.objects.all().order_by('-id')
-        paginator = Paginator(queryset,2)
-        page_number = request.GET.get('page')
+        paginator = Paginator(queryset,10)
+
+        if request.GET.get('page'):
+            page_number = request.GET.get('page')
+        else:
+            page_number = 1
+
+        if int(page_number) > paginator.num_pages:
+            raise ValidationError("Not enough pages", code=404)
+
         try:
             datafinal = paginator.get_page(page_number)
         except EmptyPage:
             datafinal = paginator.get_page(1)
 
         serializer = TestimonialSerializer(datafinal, many=True)
-        pre_page=0
-        if datafinal.has_previous():
-            pre_page = datafinal.previous_page_number()
-        pagination = {'current_page':page_number,
-                      'next_page': datafinal.next_page_number(),
-                      'previous_page': pre_page,
-                      'is_next_page': datafinal.has_next(),
-                      'total_entries': queryset.count()}
-        data_val = {}
-        data_val['pagination'] = pagination
-        data_val['data'] = serializer.data
+
 
         if queryset.exists():
             return Response({
                 'status': consts.Success,
                 'message': 'Retrived',
-                'data': data_val
+                'data': consts.paginate(serializer.data,paginator,page_number)
             })
         return Response({
             'status': consts.Success,
@@ -120,6 +118,39 @@ class TestimonailViews(viewsets.ModelViewSet):
                 'message': 'Error',
                 'error': str(e)
             })
+
+    def retrieve(self, request, pk=None):
+        # pdb.set_trace()
+        try:
+            if pk is None:
+                return Response({
+                    'status': consts.Error,
+                    'message': 'uuid is required'
+                })
+
+            user = HomeCmsClientsSlider.objects.get(uuid=pk)
+            serializer = TestimonialSerializer(user)
+
+            return Response({
+                'status': consts.Success,
+                'message': 'Testimonial retrived Successfully',
+                'data': serializer.data
+            })
+        except Exception as e:
+            return Response({
+                'status': consts.Error,
+                'message': 'Error',
+                'error': str(e)
+            })
+
+    def destroy(self, request, *args, **kwargs):
+        # pdb.set_trace()
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({
+            'status': consts.Success,
+            'message': 'Deleted Successfully'
+        })
 
     # @action(detail=False, methods=['post'])
     # def delete_testimonial(self, request):

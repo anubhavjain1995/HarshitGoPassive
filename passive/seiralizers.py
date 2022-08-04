@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 
 from .models import HomeCms, AdminDataTable, HomeCmsClientsSlider,UserTable,UserLeadsTable,ChangesRequestTable
-from django.contrib.auth.hashers import make_password, check_password
+from .Cryptogenerator import *
 
 
 class HomeSerializer(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class AdminRegistrationSerializet(serializers.ModelSerializer):
             raise serializers.ValidationError({'password': 'password doesn\'t matches'})
 
         # account.password = make_password(password)
-        account.password = password
+        account.password = encrypt(txt=password)
 
         account.save()
         return account
@@ -61,7 +61,8 @@ class AdminLoginSerializer(serializers.ModelSerializer):
         if not attrs.get('email') == "":
             email = AdminDataTable.objects.filter(email=attrs.get('email')).count()
             if email > 0:
-                account = AdminDataTable.objects.get(email=attrs.get('email'), password=attrs.get('password'))
+                password = encrypt(txt=attrs.get('password'))
+                account = AdminDataTable.objects.get(email=attrs.get('email'), password=password)
                 return account
 
             raise serializers.ValidationError({'password': 'password doesn\'t matches'})
@@ -93,13 +94,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
+
+    # profile_image = self.validated_data['profile_image']
     def save(self):
         account = UserTable(email=self.validated_data['email'],
                                  username=self.validated_data['username'],
                                  user_type=self.validated_data['user_type'],
                                  contact_no=self.validated_data['contact_no'],
-                                 address=self.validated_data['address'],
-                                 profile_image=self.validated_data['profile_image']
+                                 address=self.validated_data['address']
                                  )
         password = self.validated_data['password']
         password2 = self.validated_data['password2']
@@ -108,8 +110,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'password': 'password doesn\'t matches'})
 
         # account.password = make_password(password)
-        account.password = password
-
+        # print(Cryptogenerator.endocedata(password))
+        account.password = encrypt(txt=password)
         account.save()
         return account
 
@@ -125,12 +127,18 @@ class UserLoginSerializer(serializers.ModelSerializer):
         if not attrs.get('email') == "":
             email = UserTable.objects.filter(email=attrs.get('email')).count()
             if email > 0:
-                account = UserTable.objects.get(email=attrs.get('email'), password=attrs.get('password'))
-                return account
+                password = attrs.get('password')#Cryptogenerator.endocedata()
+                print(password)
+                account = UserTable.objects.get(email=attrs.get('email'))
+                ser = UserSerializer(account)
+                dp_pass = decrypt(txt=ser.data.get('password'))
+                print(dp_pass)
+                if password == dp_pass:
+                    return account
+                raise serializers.ValidationError({'password': 'password doesn\'t matches'})
 
-            raise serializers.ValidationError({'password': 'password doesn\'t matches'})
-
-        raise serializers.ValidationError({'email': 'User doesn\'t exists'})
+            raise serializers.ValidationError({'email': 'User doesn\'t exists'})
+        raise serializers.ValidationError({'email': 'Please povide a valid email'})
 
 
 #leads
